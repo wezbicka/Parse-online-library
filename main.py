@@ -24,32 +24,23 @@ def download_txt(url, filename, folder='books/'):
     return filepath
 
 
+def parse(response):
+    soup = BeautifulSoup(response.text, 'lxml')
+    title_tag = soup.find('h1')
+    book_title, *author_book = title_tag.text.split("::")
+    return {
+        "title": book_title.strip(),
+        "author": author_book,
+    }
+
+
 if __name__ == "__main__":
-    # for id in range(1, 11):
-    #     url = f"https://tululu.org/txt.php?id={id}"
-        
-    #     filename = f'id{id}.txt'
-
-
-    # url = "https://tululu.org/b1/"
-    # response = requests.get(url)
-    # response.raise_for_status()
-    # soup = BeautifulSoup(response.text, 'lxml')
-    # title_tag = soup.find('h1')
-    # book = title_tag.text.split("::")
-    # book_title = book[0].strip()
-    # author_book = book[1].strip()
-    # print("Заголовок:", book_title)
-    # print("Автор:", author_book)
-
-
-    url = 'https://tululu.org/txt.php?id=1'
-
-    filepath = download_txt(url, 'Алиби')
-    print(filepath)  # Выведется books/Алиби.txt
-
-    filepath = download_txt(url, 'Али/би', folder='books/')
-    print(filepath)  # Выведется books/Алиби.txt
-
-    filepath = download_txt(url, 'Али\\би', folder='txt/')
-    print(filepath)  # Выведется txt/Алиби.txt
+    for id in range(1, 11):
+        url = f"https://tululu.org/b{id}/"
+        response = requests.get(url)
+        response.raise_for_status()
+        book = parse(response)
+        print(book['title'], book['author'])
+        download_url = f'https://tululu.org/txt.php?id={id}'
+        filename = f'{id}. {book["title"]}'
+        download_txt(download_url, filename)
