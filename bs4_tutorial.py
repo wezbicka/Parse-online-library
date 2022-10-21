@@ -12,3 +12,6 @@ title_text = title_tag.text
 print(title_text)
 image_url = soup.find('img', class_='attachment-post-image')['src']
 print(image_url)
+post = soup.find('div', class_='entry-content')
+print(post.text)
+
