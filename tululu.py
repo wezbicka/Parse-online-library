@@ -1,7 +1,7 @@
 import os
-from urllib.parse import urljoin, urlsplit, unquote
 import argparse
 
+from urllib.parse import urljoin, urlsplit, unquote
 import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
