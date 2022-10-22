@@ -1,5 +1,5 @@
 import os
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit, unquote, urlparse
 
 import requests
 from bs4 import BeautifulSoup
@@ -14,6 +14,16 @@ def check_for_redirect(response):
 def download_txt(url, filename, folder='books/'):
     os.makedirs(folder, exist_ok=True)
     filepath = os.path.join(folder, sanitize_filename(f"{filename}.txt"))
+    response = requests.get(url)
+    response.raise_for_status()
+    with open(filepath, 'wb') as file:
+        file.write(response.content)
+    return filepath
+
+
+def download_image(url, filename, folder='images/'):
+    os.makedirs(folder, exist_ok=True)
+    filepath = os.path.join(folder, sanitize_filename(f"{filename}"))
     response = requests.get(url)
     response.raise_for_status()
     with open(filepath, 'wb') as file:
@@ -49,7 +59,10 @@ if __name__ == "__main__":
         response.raise_for_status()
         book = parse(response)
         print("Заголовок:", book['title'])
-        print(book['image'])
-        print()
+        url_image = book['image']
+        print(url_image)
         filename = f'{id}. {book["title"]}'
         download_txt(download_url, filename)
+        filename = unquote(urlsplit(url_image).path).split("/")[-1]
+        print(filename)
+        download_image(url_image, filename)
