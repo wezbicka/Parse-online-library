@@ -96,7 +96,7 @@ if __name__ == "__main__":
             print("Заголовок:", book_title)
             print(url_image)
             filename = f'{id}. {book_title}'
-            # print(book['comments'])
+            print(book['comments'])
 
             download_url = f'https://tululu.org/txt.php?id={id}'
             response = requests.get(download_url)
