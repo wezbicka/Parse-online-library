@@ -1,9 +1,34 @@
 import os
 from urllib.parse import urljoin, urlsplit, unquote
+import argparse
 
 import requests
 from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
+
+
+def create_parser():
+    parser = argparse.ArgumentParser(
+        description='Скрипт для скачивания книг с сайта tululu.org'
+    )
+    parser.add_argument(
+        '-s',
+        '--start_id',
+        help='ID, с которого надо скачивать книги',
+        default=1,
+        type=int
+    )
+    parser.add_argument(
+        '-e',
+        '--end_id',
+        help='ID, до которого надо скачивать книги',
+        default=10,
+        type=int
+    )
+    args = parser.parse_args()
+    start_id = args.start_id
+    end_id = args.end_id
+    return start_id, end_id
 
 
 def check_for_redirect(response):
@@ -58,7 +83,8 @@ def parse_book_page(html):
 
 
 if __name__ == "__main__":
-    for id in range(1, 11):
+    start_id, end_id = create_parser()
+    for id in range(start_id, end_id + 1):
         try:
             url = f"https://tululu.org/b{id}/"
             response = requests.get(url)
