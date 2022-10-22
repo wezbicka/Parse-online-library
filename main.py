@@ -37,10 +37,16 @@ def parse(response):
     book_title, author_book = title_tag.text.split("::")
     image_tag = soup.find('div', class_='bookimage')
     image_url = urljoin('https://tululu.org', image_tag.find('img')['src'])
+    comments_tag = soup.find_all('div', class_='texts')
+    comments = []
+    for comment_tag in comments_tag:
+        comment = comment_tag.find('span', class_='black').text
+        comments.append(comment)
     return {
         "title": book_title.strip(),
         "author": author_book.strip(),
         "image": image_url,
+        "comments": comments,
     }
 
 
@@ -66,3 +72,5 @@ if __name__ == "__main__":
         filename = unquote(urlsplit(url_image).path).split("/")[-1]
         print(filename)
         download_image(url_image, filename)
+
+        print(book['comments'])
