@@ -33,8 +33,8 @@ def download_image(url, filename, folder='images/'):
     return filepath
 
 
-def parse(response):
-    soup = BeautifulSoup(response.text, 'lxml')
+def parse_book_page(html):
+    soup = BeautifulSoup(html, 'lxml')
     title_tag = soup.find('h1')
     book_title, author_book = title_tag.text.split("::")
     image_tag = soup.find('div', class_='bookimage')
@@ -64,22 +64,22 @@ if __name__ == "__main__":
             response = requests.get(url)
             response.raise_for_status()
             check_for_redirect(response)
-            book = parse(response)
-            print("Заголовок:", book['title'])
+            book = parse_book_page(response.text)
+            book_title = book['title']
             url_image = book['image']
+            print("Заголовок:", book_title)
             print(url_image)
+            filename = f'{id}. {book_title}'
+            # print(book['comments'])
 
             download_url = f'https://tululu.org/txt.php?id={id}'
             response = requests.get(download_url)
             response.raise_for_status()
-            filename = f'{id}. {book["title"]}'
             download_txt(download_url, filename)
 
             filename = unquote(urlsplit(url_image).path).split("/")[-1]
             print(filename)
             download_image(url_image, filename)
-
-            # print(book['comments'])
         except requests.exceptions.HTTPError:
             continue
         
