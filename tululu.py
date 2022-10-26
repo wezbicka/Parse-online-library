@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 
 
-def create_parser():
+def fetch_book_id():
     parser = argparse.ArgumentParser(
         description='Скрипт для скачивания книг с сайта tululu.org'
     )
@@ -83,7 +83,7 @@ def parse_book_page(html):
 
 
 if __name__ == "__main__":
-    start_id, end_id = create_parser()
+    start_id, end_id = fetch_book_id()
     for book_id in range(start_id, end_id + 1):
         try:
             url = f"https://tululu.org/b{book_id}/"
