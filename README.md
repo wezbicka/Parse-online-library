@@ -1,4 +1,4 @@
-# Парсер книг с сайта tululu.org
+# Парсер книг с сайта [tululu.org](https://tululu.org)
 Программа для скачивания книг с сайта [tululu.org](https://tululu.org). Функция `download_txt(url, filename, folder='books/')` скачивает книги в формате txt. Также скрипт скачивает обложки книг с сайта с помощью `download_image(url, filename, folder='images/')`. Скрипт выводит названия и авторов книг, комменатрии и жанры.
 
 ## Как установить
