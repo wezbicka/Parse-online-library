@@ -97,12 +97,8 @@ if __name__ == "__main__":
             print(url_image)
             filename = f'{book_id}. {book_title}'
             print(book['comments'])
-
             download_url = f'https://tululu.org/txt.php?id={book_id}'
-            response = requests.get(download_url)
-            response.raise_for_status()
             download_txt(download_url, filename)
-
             filename = unquote(urlsplit(url_image).path).split("/")[-1]
             print(filename)
             download_image(url_image, filename)
