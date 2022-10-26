@@ -84,9 +84,9 @@ def parse_book_page(html):
 
 if __name__ == "__main__":
     start_id, end_id = create_parser()
-    for id in range(start_id, end_id + 1):
+    for book_id in range(start_id, end_id + 1):
         try:
-            url = f"https://tululu.org/b{id}/"
+            url = f"https://tululu.org/b{book_id}/"
             response = requests.get(url)
             response.raise_for_status()
             check_for_redirect(response)
@@ -95,10 +95,10 @@ if __name__ == "__main__":
             url_image = book['image']
             print("Заголовок:", book_title)
             print(url_image)
-            filename = f'{id}. {book_title}'
+            filename = f'{book_id}. {book_title}'
             print(book['comments'])
 
-            download_url = f'https://tululu.org/txt.php?id={id}'
+            download_url = f'https://tululu.org/txt.php?id={book_id}'
             response = requests.get(download_url)
             response.raise_for_status()
             download_txt(download_url, filename)
