@@ -61,7 +61,7 @@ def download_image(url, filename, folder='images/'):
 def parse_book_page(html):
     soup = BeautifulSoup(html, 'lxml')
     title_tag = soup.find('h1')
-    book_title, author_book = title_tag.text.split("::")
+    book_title, book_author = title_tag.text.split("::")
     image_tag = soup.find('div', class_='bookimage')
     image_url = urljoin('https://tululu.org', image_tag.find('img')['src'])
     comments_tag = soup.find_all('div', class_='texts')
@@ -75,7 +75,7 @@ def parse_book_page(html):
         genres.append(tag.text)
     return {
         "title": book_title.strip(),
-        "author": author_book.strip(),
+        "author": book_author.strip(),
         "image": image_url,
         "comments": comments,
         "genres": genres,
