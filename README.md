@@ -2,6 +2,14 @@
 Программа для скачивания книг с сайта [tululu.org](https://tululu.org). Функция `download_txt(url, filename, folder='books/')` скачивает книги в формате txt. Также скрипт скачивает обложки книг с сайта с помощью `download_image(url, filename, folder='images/')`. Скрипт выводит названия и авторов книг, комменатрии и жанры.
 
 ## Как установить
+Создайте и активируйте виртуальное окружение
+
+```
+python -m venv venv
+source ./venv/Scripts/activate  #для Windows
+source ./venv/bin/activate      #для Linux и macOS
+```
+
 Python3 должен быть уже установлен. Затем используйте pip (или pip3, есть конфликт с Python2)
 
 Для установки зависимостей:
