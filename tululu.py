@@ -81,11 +81,27 @@ def parse_book_page(html, base_url):
     }
 
 
-def handle_errors(func_, *args):
+def handle_errors(book_id):
     first_reconnection = True
     while True:
         try:
-            response = func_(*args)
+            url = f"https://tululu.org/b{book_id}/"
+            response = requests.get(url)
+            response.raise_for_status()
+            check_for_redirect(response)
+            book = parse_book_page(response.text, response.url)
+            book_title = book['title']
+            url_image = book['image']
+            print("Заголовок:", book_title)
+            print(url_image)
+            filename = f'{book_id}. {book_title}'
+            print(book['comments'])
+            payload = {"id": book_id}
+            download_url = f'https://tululu.org/txt.php'
+            download_txt(download_url, payload, filename)
+            filename = unquote(urlsplit(url_image).path).split("/")[-1]
+            print(filename)
+            download_image(url_image, filename)
 
             if not first_reconnection:
                 print('Connection is restored.')
@@ -116,31 +132,10 @@ def handle_errors(func_, *args):
 
 
 def download_books_and_images(book_indexes):
-    parsed_books = []
-    for book_id in book_indexes:
-        parsed_books.append(
-            handle_errors(
-                parse_book_page,
-                book_id
-            )
-        )
-        url = f"https://tululu.org/b{book_id}/"
-        response = requests.get(url)
-        response.raise_for_status()
-        check_for_redirect(response)
-        book = parse_book_page(response.text, response.url)
-        book_title = book['title']
-        url_image = book['image']
-        print("Заголовок:", book_title)
-        print(url_image)
-        filename = f'{book_id}. {book_title}'
-        print(book['comments'])
-        payload = {"id": book_id}
-        download_url = f'https://tululu.org/txt.php'
-        download_txt(download_url, payload, filename)
-        filename = unquote(urlsplit(url_image).path).split("/")[-1]
-        print(filename)
-        download_image(url_image, filename)
+    parsed_books = [handle_errors(book_id)
+                    for book_id in book_indexes]
+    return parsed_books
+
 
 if __name__ == "__main__":
     logging.basicConfig(filename='error.log', filemode='w')
