@@ -58,12 +58,12 @@ def download_image(url, filename, folder='images/'):
     return filepath
 
 
-def parse_book_page(html):
+def parse_book_page(html, base_url):
     soup = BeautifulSoup(html, 'lxml')
     title_tag = soup.find('h1')
     book_title, book_author = title_tag.text.split("::")
     image_tag = soup.find('div', class_='bookimage')
-    image_url = urljoin('https://tululu.org', image_tag.find('img')['src'])
+    image_url = urljoin(base_url, image_tag.find('img')['src'])
     comments_tag = soup.find_all('div', class_='texts')
     comments = [comment_tag.find('span', class_='black').text 
                 for comment_tag in comments_tag]
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             response = requests.get(url)
             response.raise_for_status()
             check_for_redirect(response)
-            book = parse_book_page(response.text)
+            book = parse_book_page(response.text, response.url)
             book_title = book['title']
             url_image = book['image']
             print("Заголовок:", book_title)
