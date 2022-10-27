@@ -1,5 +1,7 @@
 import os
 import argparse
+import sys
+import logging
 
 from urllib.parse import urljoin, urlsplit, unquote
 import requests
@@ -100,5 +102,9 @@ if __name__ == "__main__":
             print(filename)
             download_image(url_image, filename)
         except requests.exceptions.HTTPError:
+            print(
+                logging.warning(f'Книги №{book_id} не найдена!'),
+                file=sys.stderr
+            )
             continue
         
