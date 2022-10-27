@@ -81,6 +81,7 @@ def parse_book_page(html, base_url):
 
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='error.log', filemode='w')
     start_id, end_id = fetch_book_id()
     for book_id in range(start_id, end_id + 1):
         try:
@@ -102,8 +103,9 @@ if __name__ == "__main__":
             print(filename)
             download_image(url_image, filename)
         except requests.exceptions.HTTPError:
+            logging.warning(f"Redirect. The book {book_id} not found")
             print(
-                logging.warning(f'Книги №{book_id} не найдена!'),
+                f'Книги №{book_id} не найдена!',
                 file=sys.stderr
             )
             continue
