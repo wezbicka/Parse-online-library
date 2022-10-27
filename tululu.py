@@ -36,10 +36,10 @@ def check_for_redirect(response):
         raise requests.exceptions.HTTPError
 
 
-def download_txt(url, filename, folder='books/'):
+def download_txt(url, payload, filename, folder='books/'):
     os.makedirs(folder, exist_ok=True)
     filepath = os.path.join(folder, sanitize_filename(f"{filename}.txt"))
-    response = requests.get(url)
+    response = requests.get(url, params=payload)
     response.raise_for_status()
     check_for_redirect(response)
     with open(filepath, 'wb') as file:
@@ -93,8 +93,9 @@ if __name__ == "__main__":
             print(url_image)
             filename = f'{book_id}. {book_title}'
             print(book['comments'])
-            download_url = f'https://tululu.org/txt.php?id={book_id}'
-            download_txt(download_url, filename)
+            payload = {"id": book_id}
+            download_url = f'https://tululu.org/txt.php'
+            download_txt(download_url, payload, filename)
             filename = unquote(urlsplit(url_image).path).split("/")[-1]
             print(filename)
             download_image(url_image, filename)
