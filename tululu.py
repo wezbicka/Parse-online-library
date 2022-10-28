@@ -114,8 +114,8 @@ def handle_errors(book_id):
                 f'Книги №{book_id} не найдена!',
                 file=sys.stderr
             )
-            sys.exit("Error!")
-        except requests.ConnectionError as connect_err:
+            break
+        except requests.exceptions.ConnectionError as connect_err:
             if first_reconnection:
                 logger.warning('Connection is down!')
                 logger.warning(connect_err)
@@ -136,7 +136,7 @@ def download_books_and_images(book_indexes):
 
 def main():
     global logger
-    logging.basicConfig(filename='error.log')
+    logging.basicConfig(filename='error.log', filemode='w')
     logger = logging.getLogger()
     start_id, end_id = fetch_book_id()
     book_indexes = range(start_id, end_id + 1)
