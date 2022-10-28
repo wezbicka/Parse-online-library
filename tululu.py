@@ -82,6 +82,7 @@ def parse_book_page(html, base_url):
 
 
 def handle_errors(book_id):
+    global logger
     first_reconnection = True
     while True:
         try:
@@ -104,12 +105,11 @@ def handle_errors(book_id):
             download_image(url_image, filename)
 
             if not first_reconnection:
-                print('Connection is restored.')
+                logger.warning('Connection is restored.')
 
             return response
-
         except requests.exceptions.HTTPError:
-            logging.warning(f"Redirect. The book {book_id} not found")
+            logger.warning(f"Redirect. The book {book_id} not found")
             print(
                 f'Книги №{book_id} не найдена!',
                 file=sys.stderr
@@ -117,17 +117,14 @@ def handle_errors(book_id):
             sys.exit("Error!")
         except requests.ConnectionError as connect_err:
             if first_reconnection:
-                print('Connection is down!')
-                print(logging.warning(connect_err), file=sys.stderr)
-                print('Retry in 5 seconds')
+                logger.warning('Connection is down!')
+                logger.warning(connect_err)
+                logger.warning('Retry in 5 seconds')
                 sleep(5)
                 first_reconnection = False
             else:
-                print(
-                    logging.warning('Connection is still down!'),
-                    file=sys.stderr
-                    )
-                print('Retry in 15 seconds')
+                logger.warning('Connection is still down!')
+                logger.warning('Retry in 15 seconds')
                 sleep(15)
 
 
@@ -137,8 +134,14 @@ def download_books_and_images(book_indexes):
     return parsed_books
 
 
-if __name__ == "__main__":
-    logging.basicConfig(filename='error.log', filemode='w')
+def main():
+    global logger
+    logging.basicConfig(filename='error.log')
+    logger = logging.getLogger()
     start_id, end_id = fetch_book_id()
     book_indexes = range(start_id, end_id + 1)
     download_books_and_images(book_indexes)
+
+
+if __name__ == "__main__":
+    main()
