@@ -89,7 +89,7 @@ def print_about_book(book):
     print(book['comments'])
 
 
-def handle_errors(book_id):
+def download_book(book_id):
     first_reconnection = True
     while True:
         try:
@@ -136,7 +136,7 @@ def main():
     )
     start_id, end_id = fetch_book_id()
     book_indexes = range(start_id, end_id + 1)
-    parsed_books = [handle_errors(book_id)
+    parsed_books = [download_book(book_id)
                     for book_id in book_indexes]
 
 
