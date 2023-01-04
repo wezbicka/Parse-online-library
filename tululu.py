@@ -10,6 +10,9 @@ from bs4 import BeautifulSoup
 from pathvalidate import sanitize_filename
 
 
+logger = logging.getLogger()
+
+
 def fetch_book_id():
     parser = argparse.ArgumentParser(
         description='Скрипт для скачивания книг с сайта tululu.org'
@@ -82,7 +85,6 @@ def parse_book_page(html, base_url):
 
 
 def handle_errors(book_id):
-    global logger
     first_reconnection = True
     while True:
         try:
@@ -135,9 +137,11 @@ def download_books_and_images(book_indexes):
 
 
 def main():
-    global logger
-    logging.basicConfig(filename='error.log', filemode='w')
-    logger = logging.getLogger()
+    logging.basicConfig(
+        level=logging.INFO,
+        filename='error.log', 
+        filemode='w',
+    )
     start_id, end_id = fetch_book_id()
     book_indexes = range(start_id, end_id + 1)
     download_books_and_images(book_indexes)
