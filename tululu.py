@@ -84,6 +84,11 @@ def parse_book_page(html, base_url):
     }
 
 
+def print_about_book(book):
+    print("Заголовок:", book['title'])
+    print(book['comments'])
+
+
 def handle_errors(book_id):
     first_reconnection = True
     while True:
@@ -95,16 +100,13 @@ def handle_errors(book_id):
             book = parse_book_page(response.text, response.url)
             book_title = book['title']
             url_image = book['image']
-            print("Заголовок:", book_title)
-            print(url_image)
             filename = f'{book_id}. {book_title}'
-            print(book['comments'])
             payload = {"id": book_id}
             download_url = f'https://tululu.org/txt.php'
             download_txt(download_url, payload, filename)
             filename = unquote(urlsplit(url_image).path).split("/")[-1]
-            print(filename)
             download_image(url_image, filename)
+            print_about_book(book)
 
             if not first_reconnection:
                 logger.warning('Connection is restored.')
@@ -112,10 +114,6 @@ def handle_errors(book_id):
             return response
         except requests.exceptions.HTTPError:
             logger.warning(f"Redirect. The book {book_id} not found")
-            print(
-                f'Книги №{book_id} не найдена!',
-                file=sys.stderr
-            )
             break
         except requests.exceptions.ConnectionError as connect_err:
             if first_reconnection:
