@@ -130,12 +130,6 @@ def handle_errors(book_id):
                 sleep(15)
 
 
-def download_books_and_images(book_indexes):
-    parsed_books = [handle_errors(book_id)
-                    for book_id in book_indexes]
-    return parsed_books
-
-
 def main():
     logging.basicConfig(
         level=logging.INFO,
@@ -144,7 +138,8 @@ def main():
     )
     start_id, end_id = fetch_book_id()
     book_indexes = range(start_id, end_id + 1)
-    download_books_and_images(book_indexes)
+    parsed_books = [handle_errors(book_id)
+                    for book_id in book_indexes]
 
 
 if __name__ == "__main__":
