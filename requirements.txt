@@ -2,3 +2,4 @@ requests==2.28.1
 urllib3==1.26.9
 pathvalidate==2.5.2
 beautifulsoup4==4.11.1
+lxml==4.9.1
